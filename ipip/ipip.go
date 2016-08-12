@@ -58,7 +58,7 @@ func Find(s string) ([]byte, error) {
 	var indexLength = -1
 
 	for start = start * 9 + 262144; start < maxValue; start += 9 {
-		tmpInt := binary.LittleEndian.Uint32(dataIndex[start:start+4])
+		tmpInt := binary.BigEndian.Uint32(dataIndex[start:start+4])
 		if tmpInt >= ipInt {
 			b[1] = dataIndex[start+6]
 			b[2] = dataIndex[start+5]
