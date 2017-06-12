@@ -6,14 +6,75 @@ import (
 	"time"
 	"math/rand"
 //	"sync"
-	"runtime"
+
+    "os"
+    "log"
 )
+
+type IPIPLocation struct{
+    Country string
+    Province string
+    City string
+    District string
+    ChinaCode string
+}
 
 func main() {
 
-	runtime.GOMAXPROCS(8)
+    log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	ipip.Load("C:/lovebizhi/tiantexin/17mon/mydata4vipday2.datx")
+    var s = "123.121.18.79"
+
+    s = "118.8.8.8"
+
+    disDb := ipip.NewDistrictDB()
+    if e := disDb.Load("c:/WORK/tiantexin/framework/library/ip/quxian.datx"); e != nil {
+        // load db file failed
+    }
+
+    cityDb := ipip.NewCityDB()
+    if e := cityDb.Load("C:/WORK/tiantexin/17mon/mydata4vipday2.datx"); e != nil {
+        // load db file failed
+    }
+
+    var loc IPIPLocation
+    dis, err := disDb.Find(s)
+    if err == nil {
+        loc.Country = dis.Country
+        loc.Province = dis.Province
+        loc.City = dis.City
+        loc.District = dis.District
+        loc.ChinaCode = dis.Code
+    } else if err == ipip.DistrictEmptyError {
+        if city, err := cityDb.Find(s); err == nil {
+            loc.Country = city.Country
+            loc.Province = city.Province
+            loc.City = city.City
+            loc.ChinaCode = city.ChinaCode
+        }
+    } else {
+        log.Fatal(err)
+    }
+
+    fmt.Println(loc)
+
+    os.Exit(0)
+    disTest()
+    cityTest()
+}
+
+func disTest() {
+    dis := ipip.NewDistrictDB()
+    dis.Load("c:/WORK/tiantexin/framework/library/ip/quxian.datx")
+
+    loc, err := dis.Find("123.121.18.79")
+    if err == nil {
+        fmt.Println(loc)
+    }
+}
+
+func cityTest() {
+	ipip.Load("C:/WORK/tiantexin/17mon/mydata4vipday2.datx")
 	var now time.Time
 	/*
 	now = time.Now()
