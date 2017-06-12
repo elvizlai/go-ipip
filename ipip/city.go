@@ -118,6 +118,9 @@ func (db *CityDB) Find(s string) (City, error) {
     var city City
 
     bs, err := db._find(s)
+    if err != nil {
+        return city, err
+    }
     loc := strings.Split(string(bs), "\t")
 
     city.Country = loc[0]
