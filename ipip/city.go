@@ -113,7 +113,7 @@ func (db *CityDB) _find(s string) ([]byte, error) {
     if indexOffset == -1 || indexLength == -1 {
         return nil, fmt.Errorf("error[%s]", "find failed.")
     }
-
+    fmt.Printf("offset[%d].length[%d]\n", indexOffset, indexLength)
     var area = make([]byte, indexLength)
     indexOffset = int(db.offset) + indexOffset - 262144
     copy(area, db.all[indexOffset:indexOffset+indexLength])
