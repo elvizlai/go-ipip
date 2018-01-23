@@ -69,6 +69,15 @@ func (db *CityDB) Load(fileName string) error {
     return nil
 }
 
+func (db *CityDB) FindSliceString(s string) []string {
+    bs, err := db._find(s)
+    if err != nil {
+        return nil
+    }
+    
+    return strings.Split(string(bs), "\t")
+}
+
 func (db *CityDB) _find(s string) ([]byte, error) {
     if len(db.all) == 0 {
         return nil, fmt.Errorf("error[%s]", "load ipdb file failed..")
