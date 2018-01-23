@@ -86,7 +86,8 @@ func (db *CityDB) _find(s string) ([]byte, error) {
     if ip == nil {
         return nil, fmt.Errorf("error[%s]", "ip format error")
     }
-
+    db.RLock()
+    defer db.RUnlock()
     ip = ip.To4()
     var ipInt = binary.BigEndian.Uint32(ip)
     var prefix = int(ip[0]) * 256 + int(ip[1])
@@ -121,8 +122,6 @@ func (db *CityDB) _find(s string) ([]byte, error) {
 }
 
 func (db *CityDB) Find(s string) (City, error) {
-    db.RLock()
-    defer db.RUnlock()
     var err error
     var city City
 
